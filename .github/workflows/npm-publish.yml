@@ -27,6 +27,8 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org/
       - run: npm ci
+      - run: git config --global user.email "odiraoseelazaro@students.tukenya.ac.ke"
+      - run: git config --global user.name "oseelabs"
       - run: npm version patch
       - run: npm publish --access public
         env:
