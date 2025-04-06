@@ -16,8 +16,8 @@ import type {
     GoogleGenAIOptions,
     Models 
 } from "@google/genai";
-import { GoogleGenAI } from "@google/genai";
 import type { ModelVariant } from "./types/model.js";
+import { GoogleGenAI } from "@google/genai";
 
 export default class Init {
     constructor(

@@ -3,6 +3,7 @@
 	"version": "0.0.1",
 	"license": "MIT",
 	"author": "Osee Labs <odiraoseelazaro@gmail.com> (https://oseelabs.org)",
+	"homepage": "https://github.com/oseelabs/ai-js#readme",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
