@@ -1,4 +1,21 @@
-import type { ContentListUnion, GoogleGenAI as GenAiType, GenerateContentConfig, GenerateContentResponse, GenerateImagesConfig, GenerateImagesResponse, GenerateVideosConfig, GenerateVideosOperation, GoogleGenAIOptions, Models } from "@google/genai";
+import type { 
+    ComputeTokensConfig,
+    ComputeTokensResponse,
+    ContentListUnion,
+    CountTokensConfig,
+    CountTokensResponse,
+    EmbedContentConfig,
+    EmbedContentResponse,
+    GoogleGenAI as GenAiType,
+    GenerateContentConfig,
+    GenerateContentResponse,
+    GenerateImagesConfig,
+    GenerateImagesResponse,
+    GenerateVideosConfig,
+    GenerateVideosOperation,
+    GoogleGenAIOptions,
+    Models 
+} from "@google/genai";
 import { GoogleGenAI } from "@google/genai";
 import type { ModelVariant } from "./types/model.js";
 
@@ -95,7 +112,6 @@ export default class Init {
      * This method generates content based on the provided contents using the Google GenAI API.
      * It requires an API key to authenticate the request.
      * The content is generated in a streaming manner, allowing for real-time processing of the generated content.
-     * The contents are generated as they are produced, allowing for real-time processing of the generated content.
      */
     async generateContentStream(contents: ContentListUnion, config?: GenerateContentConfig): Promise<AsyncGenerator<GenerateContentResponse>> {
         if (!this._apiKey) {
@@ -131,6 +147,10 @@ export default class Init {
      * console.log(images);
      * 
      * ```
+     * 
+     * This method generates images based on the provided prompt using the Google GenAI API.
+     * It requires an API key to authenticate the request.
+     * The images are generated fully before being returned.
      */
     async generateImages(prompt: string, config?: GenerateImagesConfig): Promise<GenerateImagesResponse> {
         if (!this._apiKey) {
@@ -167,6 +187,10 @@ export default class Init {
      * console.log(videos);
      * 
      * ```
+     * 
+     * This method generates videos based on the provided prompt using the Google GenAI API.
+     * It requires an API key to authenticate the request.
+     * The videos are generated fully before being returned.
      */
     async generateVideos(prompt: string, config?: GenerateVideosConfig): Promise<GenerateVideosOperation> {
         if (!this._apiKey) {
@@ -182,6 +206,122 @@ export default class Init {
             prompt: prompt,
             config: config,
         });
+
+        return res;
+    }
+
+
+    /**
+     * 
+     * @param {ContentListUnion} contents - The contents to compute tokens for.
+     * @param {ComputeTokensConfig} config - (Optional) configuration for the token computation.
+     * @returns A Promise that resolves to the number of tokens computed for the contents.
+     * @throws Error if the API key is not set or if the computation fails.
+     * 
+     * @usage
+     * ```ts
+     * 
+     * const generator = new Init(apiKey, options, modelVariant);
+     * const tokenCount = await generator.computeTokens(contents, config);
+     * console.log(tokenCount);
+     * 
+     * ```
+     * 
+     * This method computes the number of tokens for the provided contents using the Google GenAI API.
+     * It requires an API key to authenticate the request.
+     * The token count is computed fully before being returned.
+     */
+    async computeTokens(contents: ContentListUnion, config?: ComputeTokensConfig): Promise<ComputeTokensResponse> {
+        if (!this._apiKey) {
+            throw new Error("API key is not set.");
+        };
+
+        if (!this._genai) {
+            this._genai = new GoogleGenAI(this._options);
+        };
+
+        const res = this.models.computeTokens({
+            model: this._modelVariant,
+            contents: contents,
+            config: config,
+        });
+
+        return res;
+    }
+
+
+    /**
+     * 
+     * @param {ContentListUnion} contents - The contents to count tokens for.
+     * @param {CountTokensConfig} config - (Optional) Configuration options for counting tokens.
+     * @returns A promise that resolves to a `CountTokensResponse` containing the token count.
+     * @throws Error if the API key is not set.
+     * 
+     * @usage
+     * ```ts
+     * 
+     * const generator = new Init(apiKey, options, modelVariant);
+     * const tokenCount = await generator.countTokens(contents, config);
+     * console.log(tokenCount);
+     * 
+     * ```
+     * 
+     * This method counts the number of tokens in the provided contents using the Google GenAI API.
+     * It requires an API key to authenticate the request.
+     * The token count is computed fully before being returned.
+     */
+    async countTokens(contents: ContentListUnion, config?: CountTokensConfig): Promise<CountTokensResponse> {
+        if (!this._apiKey) {
+            throw new Error("API key is not set.");
+        };
+
+        if (!this._genai) {
+            this._genai = new GoogleGenAI(this._options);
+        };
+        
+        const res = await this.models.countTokens({
+            model: this._modelVariant,
+            contents: contents,
+            config: config,
+        });
+
+        return res;
+    }
+
+    /**
+     * 
+     * @param {ContentListUnion} contents - The contents to embed.
+     * @param {EmbedContentConfig} config - (Optional) configuration for the embedding.
+     * @returns A Promise that resolves to an `EmbedContentResponse` containing the embedded content.
+     * @throws Error if the API key is not set.
+     * 
+     * @usage
+     * ```ts
+     * 
+     * const generator = new Init(apiKey, options, modelVariant);
+     * const embeddedContent = await generator.embedContent(contents, config);
+     * console.log(embeddedContent);
+     * 
+     * ```
+     * 
+     * This method embeds the provided contents using the Google GenAI API.
+     * It requires an API key to authenticate the request.
+     * The embedded content is computed fully before being returned.
+     */
+    async embedContent(contents: ContentListUnion, config?: EmbedContentConfig): Promise<EmbedContentResponse> {
+        if (!this._apiKey) {
+            throw new Error("API key is not set.");
+        };
+
+        if (!this._genai) {
+            this._genai = new GoogleGenAI(this._options);
+        };
+
+        const res = await this.models.embedContent({
+            model: this._modelVariant,
+            contents: contents,
+            config: config,
+        })
 
         return res;
     }
