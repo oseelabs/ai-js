@@ -1,0 +1,1 @@
+export { default as Init } from "$lib/gemini/genai/init.js";
