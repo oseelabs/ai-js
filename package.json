@@ -1,6 +1,8 @@
 {
 	"name": "@oseelabs/ai-js",
 	"version": "0.0.1",
+	"license": "MIT",
+	"author": "Osee Labs <odiraoseelazaro@gmail.com> (https://oseelabs.org)",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
