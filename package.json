@@ -1,6 +1,6 @@
 {
 	"name": "@oseelabs/ai-js",
-	"version": "0.0.8",
+	"version": "0.0.10",
 	"license": "MIT",
 	"author": "Osee Labs <odiraoseelazaro@gmail.com> (https://oseelabs.org)",
 	"homepage": "https://github.com/oseelabs/ai-js#readme",
@@ -34,8 +34,8 @@
 			"import": "./dist/index.js",
 			"require": "./dist/index.js",
 			"browser": "./dist/index.js",
-			"default": "./dist/index.js",
-			"edge-light": "./dist/index.js"
+			"edge-light": "./dist/index.js",
+			"default": "./dist/index.js"
 		}
 	},
 	"peerDependencies": {
