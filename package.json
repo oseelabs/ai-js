@@ -1,7 +1,7 @@
 {
 	"name": "@oseelabs/ai-js",
 	"description": "A JavaScript library for AI and machine learning, providing a simple and intuitive interface for developers to integrate AI capabilities into their applications.",
-	"version": "0.0.14",
+	"version": "0.0.18",
 	"license": "MIT",
 	"author": "Osee Labs <odiraoseelazaro@gmail.com> (https://oseelabs.org)",
 	"homepage": "https://github.com/oseelabs/ai-js#readme",
@@ -32,10 +32,10 @@
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js",
-			"require": "./dist/index.js",
 			"browser": "./dist/index.js",
 			"edge-light": "./dist/index.js",
+			"import": "./dist/index.js",
+			"require": "./dist/index.js",
 			"default": "./dist/index.js"
 		}
 	},

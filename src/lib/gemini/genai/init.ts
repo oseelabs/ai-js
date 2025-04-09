@@ -19,7 +19,30 @@ import type {
 import type { ModelVariant } from "./types/model.js";
 import { GoogleGenAI } from "@google/genai";
 
+/**
+ * @namespace Oseelabs
+ * @class
+ * @category Gemini Genai
+ * @categoryDescription Google GenAI API
+ * @description The `Init` class is a wrapper around the Google GenAI API, providing methods for generating content, images, videos, and computing tokens.
+ * It requires an API key to authenticate requests and can be configured with various options.
+ * @property {string} _apiKey - The API key for authenticating requests to the Google GenAI API.
+ * @property {GoogleGenAIOptions} _options - Configuration options for the Google GenAI API.
+ * @property {GenAiType | null} _genai - An instance of the Google GenAI API client.
+ * @property {ModelVariant} _modelVariant - The model variant to use for content generation.
+ * 
+ */
 export default class Init {
+    /**
+     * Creates an instance of the `Init` class.
+     * 
+     * @param _apiKey - The API key for authenticating requests to the Google GenAI API.
+     * @param _options - Configuration options for the Google GenAI API.
+     * @param _genai - An instance of the Google GenAI API client.
+     * @param _modelVariant - The model variant to use for content generation.
+     * 
+     * @return { Init } - An instance of the `Init` class.
+     */
     constructor(
         private _apiKey: string, 
         private _options: GoogleGenAIOptions = {},
@@ -30,14 +53,27 @@ export default class Init {
         this._genai = new GoogleGenAI(this._options);
     }
 
+    /**
+     * Gets the API key for the Google GenAI API.
+     * @returns {string} The API key.
+     */
     get apiKey(): string {
         return this._apiKey;
     }
 
+    /**
+     * Sets the API key for the Google GenAI API.
+     * @param {string} value - The API key to set.
+     * @returns {void}
+     */
     set apiKey(value: string) {
         this._apiKey = value;
     }
 
+    /**
+     * Gets the model variant for the Google GenAI API.
+     * @returns {Models} The models.
+     */
     get models(): Models {
         if (!this._apiKey) {
             throw new Error("API key is not set.");
@@ -50,6 +86,10 @@ export default class Init {
         return this._genai.models
     }
 
+    /**
+     * * Gets the options for the Google GenAI API.
+     * @returns {GoogleGenAIOptions} The options.
+     */
     get options(): GoogleGenAIOptions {
         return this._options;
     }
