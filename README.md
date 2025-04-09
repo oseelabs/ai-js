@@ -95,7 +95,7 @@ This project is developed and maintained by the OseeLabs team. We appreciate you
 
 ## Acknowledgements
 - [OseeLabs](https://oseelabs.org) for providing the foundation for this project.
-- [Google Gemini](https://aistudio.google.com/search/) for providing the Generative AI API.
+- [Google Gemini](https://aistudio.google.com) for providing the Generative AI API.
 <!-- - [OpenAI](https://openai.com/) for providing the Generative AI API.
 - [Anthropic](https://www.anthropic.com/) for providing the Generative AI API.
 - [Cohere](https://cohere.ai/) for providing the Generative AI API. -->
