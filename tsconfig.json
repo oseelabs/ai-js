@@ -11,5 +11,14 @@
 		"strict": true,
 		"module": "NodeNext",
 		"moduleResolution": "NodeNext"
-	}
+	},
+	"include": [
+		"dist/**/*.js",
+		"dist/**/*.ts",
+		"src/**/*.ts"
+	],
+	"files": [
+		"dist/index.d.ts",
+		"dist/index.js",
+	]
 }

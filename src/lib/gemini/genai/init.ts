@@ -73,7 +73,7 @@ export default class Init {
      * It requires an API key to authenticate the request.
      * The content is generated fully before being returned
      */
-    async generateContent(prompt: string, config?: GenerateContentConfig): Promise<GenerateContentResponse> {
+    async generateContent(contents: ContentListUnion, config?: GenerateContentConfig): Promise<GenerateContentResponse> {
         if (!this._apiKey) {
             throw new Error("API key is not set.");
         }
@@ -84,7 +84,7 @@ export default class Init {
 
         const res = await this.models.generateContent({
             model: this._modelVariant,
-            contents: prompt,
+            contents: contents,
             config: config,
         });
 
