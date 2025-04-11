@@ -40,6 +40,10 @@ import { GoogleGenAI } from "@google/genai";
  */
 export default class Init {
     protected chat: Chat | undefined;
+    protected _session: { 
+        chat: Chat, 
+        id: `${string}-${string}-${string}-${string}-${string}` | string 
+    } | undefined = undefined;
 
     /**
      * Creates an instance of the `Init` class.
@@ -116,7 +120,7 @@ export default class Init {
      * 
      * ```
      */
-    get chatSession(): Chat {
+    get chatSession(): { chat: Chat, id: `${string}-${string}-${string}-${string}-${string}` | string } {
         if (!this.chat) {
             this.chat = this._genai?.chats.create({
                 model: this._modelVariant,
@@ -124,7 +128,11 @@ export default class Init {
             });
         };
 
-        return this.chat!;
+        if (!this._session || this._session === undefined) {
+            this._session = this.createChatSession();
+        }
+
+        return this._session!;
     };
 
 
@@ -141,13 +149,18 @@ export default class Init {
      * 
      * ```
      */
-    createChatSession() : Chat {
+    createChatSession() : { chat: Chat, id: `${string}-${string}-${string}-${string}-${string}` | string } {
         this.chat = this._genai?.chats.create({
             model: this._modelVariant,
             config: {} as GenerateContentConfig,
         });
 
-        return this.chat!;
+        this._session = {
+            chat: this.chat!,
+            id: crypto.randomUUID(),
+        };
+
+        return this._session!;
     }
 
 
@@ -437,7 +450,7 @@ export default class Init {
      * ```
      */
     async chatMessage(message: PartListUnion) : Promise<GenerateContentResponse> {
-        return await this.chatSession.sendMessage({
+        return await this.chatSession.chat.sendMessage({
             message: message,
         });
     }
@@ -460,7 +473,7 @@ export default class Init {
      * ```
      */
     async chatMessageStream(message: PartListUnion) : Promise<AsyncGenerator<GenerateContentResponse>> {
-        return await this.chatSession.sendMessageStream({
+        return await this.chatSession.chat.sendMessageStream({
             message: message,
         });
     }
