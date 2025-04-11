@@ -77,7 +77,25 @@
 		"vitest": "^3.0.0"
 	},
 	"keywords": [
-		"svelte"
+		"ai",
+		"artificial-intelligence",
+		"machine-learning",
+		"javascript",
+		"typescript",
+		"library",
+		"npm",
+		"oseelabs",
+		"oseelabs-ai-js",
+		"oseelabs-ai",
+		"oseelabs-ai-js-library",
+		"gemini",
+		"gemini-ai",
+		"gemini-ai-js",
+		"gemini-genai",
+		"gemini-genai-js",
+		"genai",
+		"gemini SDK",
+		"gemini-sdk"
 	],
 	"pnpm": {
 		"onlyBuiltDependencies": [

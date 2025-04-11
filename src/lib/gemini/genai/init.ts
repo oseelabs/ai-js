@@ -1,11 +1,15 @@
 import type { 
+    Chat,
     ComputeTokensConfig,
     ComputeTokensResponse,
     ContentListUnion,
     CountTokensConfig,
     CountTokensResponse,
+    DeleteFileConfig,
+    DeleteFileResponse,
     EmbedContentConfig,
     EmbedContentResponse,
+    File,
     GoogleGenAI as GenAiType,
     GenerateContentConfig,
     GenerateContentResponse,
@@ -13,14 +17,16 @@ import type {
     GenerateImagesResponse,
     GenerateVideosConfig,
     GenerateVideosOperation,
+    GetFileConfig,
     GoogleGenAIOptions,
-    Models 
+    Models, 
+    PartListUnion,
+    UploadFileConfig
 } from "@google/genai";
 import type { ModelVariant } from "./types/model.js";
 import { GoogleGenAI } from "@google/genai";
 
 /**
- * @namespace Oseelabs
  * @class
  * @category Gemini Genai
  * @categoryDescription Google GenAI API
@@ -33,6 +39,8 @@ import { GoogleGenAI } from "@google/genai";
  * 
  */
 export default class Init {
+    protected chat: Chat | undefined;
+
     /**
      * Creates an instance of the `Init` class.
      * 
@@ -55,7 +63,7 @@ export default class Init {
 
     /**
      * Gets the API key for the Google GenAI API.
-     * @returns {string} The API key.
+     * @returns {string}
      */
     get apiKey(): string {
         return this._apiKey;
@@ -72,7 +80,7 @@ export default class Init {
 
     /**
      * Gets the model variant for the Google GenAI API.
-     * @returns {Models} The models.
+     * @returns {Models}
      */
     get models(): Models {
         if (!this._apiKey) {
@@ -88,17 +96,65 @@ export default class Init {
 
     /**
      * * Gets the options for the Google GenAI API.
-     * @returns {GoogleGenAIOptions} The options.
+     * @returns {GoogleGenAIOptions}
      */
     get options(): GoogleGenAIOptions {
         return this._options;
     }
 
+    
+    /**
+     * Returns the current chat session.
+     * @returns { Chat }
+     * 
+     * @usage
+     * ```ts
+     * 
+     * const generator = new Init(apiKey, options, modelVariant);
+     * const chatSession = generator.chatSession;
+     * console.log(chatSession);
+     * 
+     * ```
+     */
+    get chatSession(): Chat {
+        if (!this.chat) {
+            this.chat = this._genai?.chats.create({
+                model: this._modelVariant,
+                config: {} as GenerateContentConfig,
+            });
+        };
+
+        return this.chat!;
+    };
+
 
     /**
-     * @param {string} prompt - The prompt to generate content for.
+     * Creates a new chat session for the Google GenAI API.
+     * @returns {Chat}
+     * 
+     * @usage
+     * ```ts
+     * 
+     * const generator = new Init(apiKey, options, modelVariant);
+     * const chatSession = generator.chatSession();
+     * console.log(chatSession);
+     * 
+     * ```
+     */
+    createChatSession() : Chat {
+        this.chat = this._genai?.chats.create({
+            model: this._modelVariant,
+            config: {} as GenerateContentConfig,
+        });
+
+        return this.chat!;
+    }
+
+
+    /**
+     * @param {ContentListUnion} contents - The prompt to generate content for.
      * @param {GenerateContentConfig} [config] - (Optional) configuration for the generation.
-     * @returns A Promise that resolves to a GenerateContentResponse object.
+     * @returns {Promise<GenerateContentResponse>}
      * @throws Error if the API key is not set or if the generation fails.
      * 
      * @usage
@@ -136,7 +192,7 @@ export default class Init {
      * 
      * @param {ContentListUnion} contents - The contents to generate.
      * @param {GenerateContentConfig} [config] - (Optional) configuration for the generation. 
-     * @returns A Promise that resolves to an AsyncGenerator of GenerateContentResponse objects.
+     * @returns {Promise<AsyncGenerator<GenerateContentResponse>>}
      * @throws Error if the API key is not set or if the generation fails.
      * 
      * @usage
@@ -176,7 +232,7 @@ export default class Init {
      * 
      * @param {string} prompt - The prompt to generate images for.
      * @param {GenerateImagesConfig} config - (Optional) configuration for the generation.
-     * @returns A Promise that resolves to a GenerateImagesResponse object.
+     * @returns {Promise<GenerateImagesResponse>}
      * @throws Error if the API key is not set or if the generation fails.
      * 
      * @usage
@@ -216,7 +272,7 @@ export default class Init {
      *
      * @param prompt - The text prompt describing the desired video content.
      * @param config - (Optional) Configuration options for video generation.
-     * @returns A promise that resolves to a `GenerateVideosOperation` containing the result of the video generation process.
+     * @returns {Promise<GenerateVideosOperation>}
      * @throws Error - If the API key is not set.
      * 
      * @usage
@@ -252,10 +308,9 @@ export default class Init {
 
 
     /**
-     * 
      * @param {ContentListUnion} contents - The contents to compute tokens for.
      * @param {ComputeTokensConfig} config - (Optional) configuration for the token computation.
-     * @returns A Promise that resolves to the number of tokens computed for the contents.
+     * @returns {Promise<ComputeTokensResponse>}
      * @throws Error if the API key is not set or if the computation fails.
      * 
      * @usage
@@ -294,7 +349,7 @@ export default class Init {
      * 
      * @param {ContentListUnion} contents - The contents to count tokens for.
      * @param {CountTokensConfig} config - (Optional) Configuration options for counting tokens.
-     * @returns A promise that resolves to a `CountTokensResponse` containing the token count.
+     * @returns {Promise<CountTokensResponse>}
      * @throws Error if the API key is not set.
      * 
      * @usage
@@ -332,7 +387,7 @@ export default class Init {
      * 
      * @param {ContentListUnion} contents - The contents to embed.
      * @param {EmbedContentConfig} config - (Optional) configuration for the embedding.
-     * @returns A Promise that resolves to an `EmbedContentResponse` containing the embedded content.
+     * @returns {Promise<EmbedContentResponse>}
      * @throws Error if the API key is not set.
      * 
      * @usage
@@ -364,5 +419,119 @@ export default class Init {
         })
 
         return res;
+    }
+
+
+    /**
+     * Sends a chat message to the Google GenAI API and returns the response.
+     * @param {PartListUnion} message - The message to send to the chat session.
+     * @returns {Promise<GenerateContentResponse>}
+     * 
+     * @usage
+     * ```ts
+     * 
+     * const generator = new Init(apiKey, options, modelVariant);
+     * const response = await generator.chatMessage(message);
+     * console.log(response.text);
+     * 
+     * ```
+     */
+    async chatMessage(message: PartListUnion) : Promise<GenerateContentResponse> {
+        return await this.chatSession.sendMessage({
+            message: message,
+        });
+    }
+
+
+    /**
+     * Sends a chat message to the Google GenAI API and returns a stream of responses.
+     * @param {PartListUnion} message - The message to send to the chat session.
+     * @returns {Promise<AsyncGenerator<GenerateContentResponse>>}
+     * 
+     * @usage
+     * ```ts
+     * 
+     * const generator = new Init(apiKey, options, modelVariant);
+     * const messageStream = generator.chatMessageStream(message);
+     * for await (const response of messageStream) {
+     *   console.log(response.text);
+     * }
+     * 
+     * ```
+     */
+    async chatMessageStream(message: PartListUnion) : Promise<AsyncGenerator<GenerateContentResponse>> {
+        return await this.chatSession.sendMessageStream({
+            message: message,
+        });
+    }
+
+
+    /**
+     * Uploads a file to the Google GenAI API.
+     * @param { Blob | string } file - The file to upload.
+     * @returns { Promise<File> }
+     * 
+     * @usage
+     * ```ts
+     * 
+     * const generator = new Init(apiKey, options, modelVariant);
+     * const file = await generator.uploadFile(fileBlob);
+     * console.log(file);
+     * 
+     * ```
+     */
+    async uploadFile(file: Blob | string, config?: UploadFileConfig): Promise<File> {
+        const newUpload = (await this._genai?.files.upload({
+            file: file,
+            config: config
+        }));
+
+        if (!newUpload) {
+            throw Error("Upload failed")
+        };
+
+        return newUpload;
+    }
+
+
+    /**
+     * Retrieves a file from the Google GenAI API.
+     * @param {string} filename - The name of the file to retrieve.
+     * @returns { Promise<File> }
+     * @throws Error if the file is not found.
+     * 
+     * @usage
+     * ```ts
+     * 
+     * const generator = new Init(apiKey, options, modelVariant);
+     * const file = await generator.getFile(filename);
+     * console.log(file);
+     * 
+     * ```
+     */
+    async getFile(filename: string, config?: GetFileConfig): Promise<File> {
+        const file = await this._genai?.files.get({
+            name: filename,
+            config: config,
+        });
+
+        if (!file) {
+            throw Error("File not found")
+        };
+
+        return file;
+    }
+
+    async deleteFile(filename: string, config?: DeleteFileConfig): Promise<DeleteFileResponse> {
+        const response = await this._genai?.files.delete({
+            name: filename,
+            config: config
+        });
+
+        if (!response) {
+            throw Error("File not found")
+        };
+
+        return response;
     }
 }

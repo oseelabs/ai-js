@@ -1,4 +1,3 @@
 // Reexport your entry components here
-export { Init } from "$lib/gemini/index.js";
-
-// export * as GoogleGenAi from "@google/genai";
+export * as Classes from "$lib/classes/index.js";
+export * as Gemini from "@google/genai";
